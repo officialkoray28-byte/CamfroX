@@ -7,3 +7,4 @@ dist/
 .DS_Store
 .tools/
 client/release/
+client/release-new/
