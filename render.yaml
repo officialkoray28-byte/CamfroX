@@ -20,7 +20,6 @@ services:
   - type: web
     name: camfrox-web
     runtime: static
-    plan: free
     rootDir: client
     buildCommand: npm ci && npm run build
     staticPublishPath: client/dist
