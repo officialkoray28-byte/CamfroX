@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "desktop": "npm run build && electron .",
-    "desktop:package": "npm run build && electron-builder --win nsis"
+    "desktop:package": "npm run build && node desktop/package.cjs"
   },
   "dependencies": {
     "react": "^19.2.8",
@@ -37,7 +37,7 @@
     "productName": "CamfroX",
     "directories": { "output": "release" },
     "files": ["dist/**/*", "desktop/**/*", "package.json"],
-    "win": { "target": ["nsis"], "icon": "public/legacy/favicon.ico" },
+    "win": { "target": ["nsis"] },
     "nsis": {
       "oneClick": false,
       "allowToChangeInstallationDirectory": true,

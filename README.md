@@ -36,4 +36,4 @@ npm install
 npm run desktop:package
 ```
 
-Kurulum dosyası `client/release` klasörüne üretilir. Geliştirme sırasında önce `npm run dev`, ardından ikinci terminalde `npm run desktop` kullanılır.
+Kurulum dosyası doğrudan Windows'un `Downloads` klasörüne üretilir. Geliştirme sırasında önce `npm run dev`, ardından ikinci terminalde `npm run desktop` kullanılır.
