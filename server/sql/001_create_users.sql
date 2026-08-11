@@ -15,3 +15,6 @@ CREATE TABLE IF NOT EXISTS users (
 
 CREATE UNIQUE INDEX IF NOT EXISTS users_nickname_unique ON users (LOWER(nickname));
 CREATE UNIQUE INDEX IF NOT EXISTS users_email_unique ON users (LOWER(email));
+
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE users FROM anon, authenticated;
