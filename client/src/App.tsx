@@ -34,6 +34,29 @@ function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () =>
   );
 }
 
+function LoginScreen({ onSuccess, onBack }: { onSuccess: (nickname: string, token: string) => void; onBack: () => void }) {
+  const [nickname, setNickname] = useState('');
+  const [password, setPassword] = useState('');
+  const [notice, setNotice] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const submit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setNotice('');
+    setLoading(true);
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api'}/auth/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ nickname, password }) });
+      const data = (await response.json().catch(() => ({}))) as { message?: string; token?: string; user?: { nickname: string } };
+      if (!response.ok || !data.token || !data.user) throw new Error(data.message ?? 'Giriş yapılamadı.');
+      onSuccess(data.user.nickname, data.token);
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : 'Sunucuya bağlanılamadı.');
+    } finally { setLoading(false); }
+  };
+
+  return <main className="login-window"><header className="registration-titlebar"><span className="title-check">✓</span> Camfrog'a Giriş Yap</header><section className="login-card"><div className="login-mascot"><i /><i /></div><h1>Tekrar hoş geldiniz!</h1><p>Camfrog hesabınızla giriş yapın.</p><form onSubmit={submit}><label>Kullanıcı adı<input value={nickname} onChange={(event) => setNickname(event.target.value)} autoFocus autoComplete="username" /></label><label>Şifre<input type="password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete="current-password" /></label>{notice && <p className="login-notice" role="status">{notice}</p>}<button disabled={loading} type="submit">{loading ? 'Giriş yapılıyor…' : 'Giriş yap'}</button></form><button className="back-to-register" type="button" onClick={onBack}>← Yeni profil oluştur</button></section></main>;
+}
+
 function RegistrationScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -47,6 +70,7 @@ function RegistrationScreen() {
   const [newsOffers, setNewsOffers] = useState(true);
   const [notice, setNotice] = useState('');
   const [loggedInUser, setLoggedInUser] = useState(() => localStorage.getItem('camfrog.nickname'));
+  const [loginMode, setLoginMode] = useState(false);
 
   const passwordStrength = useMemo(() => {
     if (!password) return { label: 'Çok zayıf', value: 0 };
@@ -90,6 +114,10 @@ function RegistrationScreen() {
     return <CamfrogHome nickname={loggedInUser} onLogout={() => { localStorage.removeItem('camfrog.token'); localStorage.removeItem('camfrog.nickname'); setLoggedInUser(null); }} />;
   }
 
+  if (loginMode) {
+    return <LoginScreen onBack={() => setLoginMode(false)} onSuccess={(nickname, token) => { localStorage.setItem('camfrog.token', token); localStorage.setItem('camfrog.nickname', nickname); setLoggedInUser(nickname); }} />;
+  }
+
   return (
     <main className="registration-window" aria-label="Yeni Profil Oluştur">
       <header className="registration-titlebar"><span className="title-check">✓</span> Yeni Profil Oluştur <div className="reg-window-controls"><button type="button">−</button><button type="button">□</button><button type="button">×</button></div></header>
@@ -117,7 +145,7 @@ function RegistrationScreen() {
           </form>
         </section>
       </div>
-      <footer className="signin-footer"><button type="button" onClick={() => setNotice('Giriş ekranı yakında eklenecek.')}>Zaten bir hesabınız mı var? Giriş yapın.</button></footer>
+      <footer className="signin-footer"><button type="button" onClick={() => setLoginMode(true)}>Zaten bir hesabınız mı var? Giriş yapın.</button></footer>
     </main>
   );
 }
