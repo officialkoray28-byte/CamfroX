@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import './App.css';
 
 function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () => void }) {
@@ -70,7 +70,13 @@ function RegistrationScreen() {
   const [newsOffers, setNewsOffers] = useState(true);
   const [notice, setNotice] = useState('');
   const [loggedInUser, setLoggedInUser] = useState(() => localStorage.getItem('camfrog.nickname'));
-  const [loginMode, setLoginMode] = useState(false);
+  const [loginMode, setLoginMode] = useState(() => window.location.hash === '#login');
+
+  useEffect(() => {
+    const syncLoginScreen = () => setLoginMode(window.location.hash === '#login');
+    window.addEventListener('hashchange', syncLoginScreen);
+    return () => window.removeEventListener('hashchange', syncLoginScreen);
+  }, []);
 
   const passwordStrength = useMemo(() => {
     if (!password) return { label: 'Çok zayıf', value: 0 };
@@ -111,11 +117,11 @@ function RegistrationScreen() {
   };
 
   if (loggedInUser) {
-    return <CamfrogHome nickname={loggedInUser} onLogout={() => { localStorage.removeItem('camfrog.token'); localStorage.removeItem('camfrog.nickname'); setLoggedInUser(null); }} />;
+    return <CamfrogHome nickname={loggedInUser} onLogout={() => { localStorage.removeItem('camfrog.token'); localStorage.removeItem('camfrog.nickname'); history.replaceState(null, '', window.location.pathname); setLoginMode(false); setLoggedInUser(null); }} />;
   }
 
   if (loginMode) {
-    return <LoginScreen onBack={() => setLoginMode(false)} onSuccess={(nickname, token) => { localStorage.setItem('camfrog.token', token); localStorage.setItem('camfrog.nickname', nickname); setLoggedInUser(nickname); }} />;
+    return <LoginScreen onBack={() => { history.replaceState(null, '', window.location.pathname); setLoginMode(false); }} onSuccess={(nickname, token) => { localStorage.setItem('camfrog.token', token); localStorage.setItem('camfrog.nickname', nickname); setLoggedInUser(nickname); }} />;
   }
 
   return (
@@ -145,7 +151,7 @@ function RegistrationScreen() {
           </form>
         </section>
       </div>
-      <footer className="signin-footer"><button type="button" onClick={() => setLoginMode(true)}>Zaten bir hesabınız mı var? Giriş yapın.</button></footer>
+      <footer className="signin-footer"><a href="#login">Zaten bir hesabınız mı var? Giriş yapın.</a></footer>
     </main>
   );
 }
