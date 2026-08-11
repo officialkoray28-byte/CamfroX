@@ -30,5 +30,7 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"
+      - key: ELECTRON_SKIP_BINARY_DOWNLOAD
+        value: "1"
       - key: VITE_API_URL
         value: https://camfrox-api.onrender.com/api
