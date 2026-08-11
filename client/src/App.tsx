@@ -1,6 +1,25 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import './App.css';
 
+function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () => void }) {
+  return (
+    <main className="home-window" aria-label="Camfrog ana ekranı">
+      <header className="home-titlebar"><strong>Camfrog</strong><span>− ×</span></header>
+      <section className="home-profile"><i className="home-avatar" /><b>{nickname} (Online)</b><button type="button" onClick={onLogout}>Çıkış yap</button></section>
+      <nav className="home-tabs"><button className="selected" type="button">👥 Contacts</button><button type="button">▣ Rooms</button></nav>
+      <section className="home-content">
+        <div className="home-logo"><i /><b>camfro</b><em>g</em></div>
+        <button type="button">📹 Join Main Camfrog Room</button>
+        <button type="button">🏠 Video Chat Rooms</button>
+        <button type="button">👥 Search for Camfrog Users</button>
+        <button type="button">🔒 Parental Controls</button>
+        <button type="button">◉ Chat with friends on Facebook</button>
+      </section>
+      <footer className="home-toolbar">◉ 🏠 👥 💬 ➕</footer>
+    </main>
+  );
+}
+
 function RegistrationScreen() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -13,6 +32,7 @@ function RegistrationScreen() {
   const [emailOffers, setEmailOffers] = useState(true);
   const [newsOffers, setNewsOffers] = useState(true);
   const [notice, setNotice] = useState('');
+  const [loggedInUser, setLoggedInUser] = useState(() => localStorage.getItem('camfrog.nickname'));
 
   const passwordStrength = useMemo(() => {
     if (!password) return { label: 'Çok zayıf', value: 0 };
@@ -41,15 +61,20 @@ function RegistrationScreen() {
           newsOffers,
         }),
       });
-      const data = (await response.json().catch(() => ({}))) as { message?: string; token?: string };
-      if (!response.ok || !data.token) throw new Error(data.message ?? 'Kayıt tamamlanamadı.');
+      const data = (await response.json().catch(() => ({}))) as { message?: string; token?: string; user?: { nickname: string } };
+      if (!response.ok || !data.token || !data.user) throw new Error(data.message ?? 'Kayıt tamamlanamadı.');
       localStorage.setItem('camfrog.token', data.token);
+      localStorage.setItem('camfrog.nickname', data.user.nickname);
       setPassword('');
-      setNotice('Kayıt başarıyla tamamlandı. Profiliniz oluşturuldu.');
+      setLoggedInUser(data.user.nickname);
     } catch (error) {
       setNotice(error instanceof Error ? error.message : 'Sunucuya bağlanılamadı.');
     }
   };
+
+  if (loggedInUser) {
+    return <CamfrogHome nickname={loggedInUser} onLogout={() => { localStorage.removeItem('camfrog.token'); localStorage.removeItem('camfrog.nickname'); setLoggedInUser(null); }} />;
+  }
 
   return (
     <main className="registration-window" aria-label="Yeni Profil Oluştur">
