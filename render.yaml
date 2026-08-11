@@ -3,6 +3,7 @@ services:
     name: camfrox-api
     runtime: node
     plan: free
+    branch: main
     rootDir: server
     autoDeployTrigger: commit
     buildCommand: npm ci && npm run build
@@ -21,6 +22,7 @@ services:
   - type: web
     name: camfrox-web
     runtime: static
+    branch: main
     rootDir: client
     autoDeployTrigger: commit
     buildCommand: npm ci && npm run build
