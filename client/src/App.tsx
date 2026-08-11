@@ -2,20 +2,24 @@ import { useMemo, useState, type FormEvent } from 'react';
 import './App.css';
 
 function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () => void }) {
+  const actions = [
+    ['camera', 'Join Main Camfrog Room'],
+    ['house', 'Video Chat Rooms'],
+    ['people', 'Search for Camfrog Users'],
+    ['lock', 'Parental Controls'],
+    ['facebook', <>Chat with friends on<br />Facebook</>],
+  ] as const;
   return (
     <main className="home-window" aria-label="Camfrog ana ekranı">
-      <header className="home-titlebar"><strong>Camfrog</strong><span>− ×</span></header>
-      <section className="home-profile"><i className="home-avatar" /><b>{nickname} (Online)</b><button type="button" onClick={onLogout}>Çıkış yap</button></section>
-      <nav className="home-tabs"><button className="selected" type="button">👥 Contacts</button><button type="button">▣ Rooms</button></nav>
+      <header className="home-titlebar"><button type="button">Camfrog <i>▼</i></button><span className="title-dots"><i /><i /><i /></span><span className="window-actions">− ×</span></header>
+      <section className="home-profile"><div><i className="home-avatar" /><b>{nickname} (Online)</b> <small>▼</small><button type="button" onClick={onLogout}>Çıkış</button></div><button className="status-prompt" type="button">What's hopping? <small>▼</small></button></section>
+      <nav className="home-tabs"><button className="selected" type="button"><i className="contacts-mark" />Contacts</button><button type="button"><i className="rooms-mark" />Rooms</button></nav>
       <section className="home-content">
-        <div className="home-logo"><i /><b>camfro</b><em>g</em></div>
-        <button type="button">📹 Join Main Camfrog Room</button>
-        <button type="button">🏠 Video Chat Rooms</button>
-        <button type="button">👥 Search for Camfrog Users</button>
-        <button type="button">🔒 Parental Controls</button>
-        <button type="button">◉ Chat with friends on Facebook</button>
+        <div className="home-logo"><span className="home-orbs"><i /><i /><i /></span><b>camfro</b><em>g</em></div>
+        <div className="home-links">{actions.map(([icon, label]) => <button key={icon} type="button"><i className={`action-icon ${icon}`} /><span>{label}</span></button>)}</div>
       </section>
-      <footer className="home-toolbar">◉ 🏠 👥 💬 ➕</footer>
+      <footer className="home-toolbar"><i className="tool-bubbles"><b /><b /><b /></i><i className="tool-home" /><i className="tool-users" /><i className="tool-chat" /><i className="tool-add">+</i></footer>
+      <div className="home-upgrade"><button type="button">Get Camfrog Pro</button> for more features.</div>
     </main>
   );
 }
