@@ -1,0 +1,14 @@
+:root {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #333;
+  background: #202020;
+  font-synthesis: none;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+}
