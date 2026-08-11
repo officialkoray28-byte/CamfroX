@@ -4,6 +4,7 @@ services:
     runtime: node
     plan: free
     rootDir: server
+    autoDeployTrigger: commit
     buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /api/health
@@ -21,6 +22,7 @@ services:
     name: camfrox-web
     runtime: static
     rootDir: client
+    autoDeployTrigger: commit
     buildCommand: npm ci && npm run build
     staticPublishPath: dist
     envVars:
