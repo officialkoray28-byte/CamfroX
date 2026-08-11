@@ -25,3 +25,15 @@ Projede iki Render servisini tanımlayan `render.yaml` bulunur: `camfrox-web` (a
 cd client; npm run build; npm run lint
 cd server; npm run build; npm test
 ```
+
+## Windows kurulumu
+
+Masaüstü paketi yeni CamfroX arayüzünü açar ve aynı Render API'sine bağlanır. Eski EXE/DLL dosyaları pakete dahil edilmez.
+
+```powershell
+cd client
+npm install
+npm run desktop:package
+```
+
+Kurulum dosyası `client/release` klasörüne üretilir. Geliştirme sırasında önce `npm run dev`, ardından ikinci terminalde `npm run desktop` kullanılır.

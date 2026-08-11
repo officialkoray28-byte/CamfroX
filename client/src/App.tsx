@@ -25,7 +25,7 @@ function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () =>
       <section className="home-profile"><div><i className="home-avatar" /><b>{nickname} (Online)</b> <small>▼</small><button type="button" onClick={onLogout}>Çıkış</button></div><button className="status-prompt" type="button">What's hopping? <small>▼</small></button></section>
       <nav className="home-tabs"><button className="selected" type="button"><i className="contacts-mark" />Contacts</button><button type="button"><i className="rooms-mark" />Rooms</button></nav>
       <section className="home-content">
-        <div className="home-logo"><span className="home-orbs"><i /><i /><i /></span><b>camfro</b><em>g</em></div>
+        <img className="home-logo-image" src="/legacy/common_user_logo.jpg" alt="CamfroX" />
         <div className="home-links">{actions.map(([icon, label]) => <button key={icon} type="button"><i className={`action-icon ${icon}`} /><span>{label}</span></button>)}</div>
       </section>
       <footer className="home-toolbar"><i className="tool-bubbles"><b /><b /><b /></i><i className="tool-home" /><i className="tool-users" /><i className="tool-chat" /><i className="tool-add">+</i></footer>
