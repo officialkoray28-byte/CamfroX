@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from 'react';
 import './App.css';
 
 function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () => void }) {
+  const [menuOpen, setMenuOpen] = useState(false);
   const actions = [
     ['camera', 'Join Main Camfrog Room'],
     ['house', 'Video Chat Rooms'],
@@ -11,7 +12,16 @@ function CamfrogHome({ nickname, onLogout }: { nickname: string; onLogout: () =>
   ] as const;
   return (
     <main className="home-window" aria-label="Camfrog ana ekranı">
-      <header className="home-titlebar"><button type="button">Camfrog <i>▼</i></button><span className="title-dots"><i /><i /><i /></span><span className="window-actions">− ×</span></header>
+      <header className="home-titlebar"><button type="button" onClick={() => setMenuOpen((isOpen) => !isOpen)} aria-expanded={menuOpen}>Camfrog <i>▼</i></button><span className="title-dots"><i /><i /><i /></span><span className="window-actions">− ×</span></header>
+      {menuOpen && <nav className="camfrog-menu" aria-label="Camfrog menüsü">
+        <button type="button">Facebook ile Bağlan</button><button type="button">Camfrog ile Bağlan</button><button type="button"><i className="green-check">✓</i>Yeni Profil Oluştur</button>
+        <hr /><button type="button" disabled>Camfrog Pro'yu Etkinleştir</button><button type="button"><i>♟</i>Camfrog Pro Satın Al</button>
+        <hr /><button type="button" disabled><i>♟</i>Kişi Ekle...</button><button type="button" disabled><i>◈</i>Video Sohbet Odasına Bağlan... <kbd>Ctrl+R</kbd></button><button type="button" disabled><i>⌂</i>Kullanıcının Konumunu Belirle...</button><button type="button" disabled><i>♙</i>Sanık Gönder...</button>
+        <hr /><button type="button" disabled><i>⊙</i>Minik Oda Yarat</button><button type="button" disabled><i>⇩</i>Dosya transferi...</button><button type="button" disabled><i>◉</i>Geçmiş Penceresi... <kbd>Ctrl+H</kbd></button>
+        <hr /><button type="button"><i>⚙</i>Ayarlar... <kbd>Ctrl+S</kbd></button><button type="button"><i>◉</i>Görüntü</button><button type="button"><i>🔤</i>Lisan Değiştir <b>›</b></button><button type="button" disabled><i>⚿</i>Şifre Değiştir...</button><button type="button" disabled><i>@</i>E-Posta Değiştir...</button><button type="button">Tema <b>›</b></button>
+        <hr /><button type="button"><i>▣</i>Ebeveyn Denetimleri</button><button type="button" disabled><i>◌</i>IM YAKALAYICI KAPALI</button>
+        <hr /><button type="button">Yardım <b>›</b></button><hr /><button type="button" onClick={onLogout}><i>◉</i>Çıkış <kbd>Alt+X</kbd></button>
+      </nav>}
       <section className="home-profile"><div><i className="home-avatar" /><b>{nickname} (Online)</b> <small>▼</small><button type="button" onClick={onLogout}>Çıkış</button></div><button className="status-prompt" type="button">What's hopping? <small>▼</small></button></section>
       <nav className="home-tabs"><button className="selected" type="button"><i className="contacts-mark" />Contacts</button><button type="button"><i className="rooms-mark" />Rooms</button></nav>
       <section className="home-content">
